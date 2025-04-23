@@ -2,19 +2,32 @@
 import { useEffect, useState } from "react";
 
 const API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
-const API_URL = `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`;
+const BASE_URL = "https://api.themoviedb.org/3/movie";
 const IMG_URL = "https://image.tmdb.org/t/p/w500";
 
 export default function Home() {
-  const [movies, setMovies] = useState([]);
+  const [nowPlaying, setNowPlaying] = useState([]);
+  const [upcoming, setUpcoming] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const language = "hi-IN";
+  const region = "IN";
+
   useEffect(() => {
-    const fetchMovies = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch(API_URL);
-        const data = await res.json();
-        setMovies(data.results);
+        const nowPlayingRes = await fetch(
+          `${BASE_URL}/now_playing?api_key=${API_KEY}&language=${language}&region=${region}&page=1`
+        );
+        const upcomingRes = await fetch(
+          `${BASE_URL}/upcoming?api_key=${API_KEY}&language=${language}&region=${region}&page=1`
+        );
+
+        const nowPlayingData = await nowPlayingRes.json();
+        const upcomingData = await upcomingRes.json();
+
+        setNowPlaying(nowPlayingData.results || []);
+        setUpcoming(upcomingData.results || []);
       } catch (err) {
         console.error("Error fetching movies:", err);
       } finally {
@@ -22,43 +35,55 @@ export default function Home() {
       }
     };
 
-    fetchMovies();
+    fetchData();
   }, []);
+
+  const renderMovieGrid = (movies) => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {movies.map((movie) => (
+        <div key={movie.id} className="bg-gray-800 p-4 rounded-lg shadow-md">
+          <img
+            src={
+              movie.poster_path
+                ? `${IMG_URL}${movie.poster_path}`
+                : "/no-image.jpg"
+            }
+            alt={movie.title}
+            className="rounded mb-3 object-cover w-full h-[400px]"
+          />
+          <h2 className="text-xl font-semibold">{movie.title}</h2>
+          <p className="text-sm mt-2 line-clamp-3 text-gray-300">
+            {movie.overview}
+          </p>
+          <p className="mt-2 font-bold text-yellow-400">
+            ⭐ {movie.vote_average.toFixed(1)}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <main className="p-6 bg-gray-900 min-h-screen text-white">
-      <h1 className="text-4xl font-bold mb-6 text-center">🎬 Now Playing</h1>
-      {loading ? (
-        <p className="text-center">Loading...</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {movies.map((movie) => (
-            <div
-              key={movie.id}
-              className="bg-gray-800 p-4 rounded-lg shadow-md"
-            >
-              <img
-                src={
-                  movie.poster_path
-                    ? `${IMG_URL}${movie.poster_path}`
-                    : "/no-image.jpg"
-                }
-                alt={movie.title}
-                className="rounded mb-3 object-cover w-full h-[400px]"
-              />
-              <h2 className="text-xl font-semibold h-[56px] overflow-hidden">
-                {movie.title}
-              </h2>
-              <p className="text-sm mt-2 line-clamp-3 text-gray-300">
-                {movie.overview}
-              </p>
-              <p className="mt-2 font-bold text-yellow-400">
-                ⭐ {movie.vote_average.toFixed(1)}
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
+      <section>
+        <h1 className="text-4xl font-bold mb-6 text-center">🎬 Now Playing</h1>
+        {loading ? (
+          <p className="text-center">Loading...</p>
+        ) : (
+          renderMovieGrid(nowPlaying)
+        )}
+      </section>
+
+      <section className="mt-10">
+        <h1 className="text-4xl font-bold mb-6 text-center">
+          📽️ Upcoming Movies
+        </h1>
+        {loading ? (
+          <p className="text-center">Loading...</p>
+        ) : (
+          renderMovieGrid(upcoming)
+        )}
+      </section>
     </main>
   );
 }
