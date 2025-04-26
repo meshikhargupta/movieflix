@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { CalendarDays, Star } from "lucide-react";
+import Link from "next/link";
 
 const API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 const IMG_URL = "https://image.tmdb.org/t/p/w500";
@@ -103,9 +104,10 @@ export default function MovieGrid({ type = "now_playing", heading }) {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
           {movies.map((movie) => (
-            <div
+            <Link
               key={movie.id}
-              className="bg-gray-800 p-4 rounded-2xl shadow-lg hover:shadow-yellow-500/30 transition-all"
+              href={`/movie/${movie.id}`}
+              className="bg-gray-800 p-4 rounded-2xl shadow-lg hover:shadow-yellow-500/30 transition-all block"
             >
               <img
                 src={
@@ -132,7 +134,7 @@ export default function MovieGrid({ type = "now_playing", heading }) {
                   {movie.vote_average.toFixed(1)}
                 </p>
               )}
-            </div>
+            </Link>
           ))}
         </div>
       )}
