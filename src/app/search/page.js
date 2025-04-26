@@ -7,7 +7,7 @@ const API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 const IMG_URL = "https://image.tmdb.org/t/p/w500";
 
 export default function SearchPage() {
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams({ suspense: false });
   const query = searchParams.get("query");
   const [movies, setMovies] = useState([]);
 
