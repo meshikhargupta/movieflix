@@ -33,16 +33,6 @@ export default function Header() {
           <Link href="/upcoming" className={`${isActive("/upcoming")}`}>
             Upcoming
           </Link>
-          {/* Search Form */}
-          <form action="/search" method="GET" className="relative">
-            <input
-              type="text"
-              name="query"
-              placeholder="Search Movies..."
-              className="bg-gray-800 text-white py-2 pl-10 pr-4 rounded-lg w-44 sm:w-60 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-            />
-            <Search className="absolute left-3 top-3.5 w-4 h-4 text-gray-400" />
-          </form>
         </nav>
       </div>
     </header>

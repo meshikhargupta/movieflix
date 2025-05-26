@@ -46,7 +46,7 @@ export default function MovieDetailPage() {
 
   return (
     <main className="p-6 bg-gray-900 min-h-screen text-white">
-      <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-8">
+      <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-8 mt-6">
         {/* Poster */}
         <img
           src={
