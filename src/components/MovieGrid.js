@@ -19,8 +19,8 @@ export default function MovieGrid({ type = "now_playing", heading }) {
       for (let i = 1; i <= pagesToFetch; i++) {
         promises.push(
           fetch(
-            `https://api.themoviedb.org/3/movie/${type}?api_key=${API_KEY}&region=IN&page=${i}`
-          ).then((res) => res.json())
+            `https://api.themoviedb.org/3/movie/${type}?api_key=${API_KEY}&region=IN&page=${i}`,
+          ).then((res) => res.json()),
         );
       }
 
