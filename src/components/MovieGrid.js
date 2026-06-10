@@ -29,7 +29,12 @@ export default function MovieGrid({ type = "now_playing", heading }) {
 
       const filteredMovies = allMovies
         .filter((movie) => movie.original_language === "hi")
-        .sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
+        .sort((a, b) => {
+          const ta = new Date(a.release_date).getTime() || 0;
+          const tb = new Date(b.release_date).getTime() || 0;
+          // now_playing: newest first (descending). Others (e.g., upcoming): oldest first (ascending).
+          return type === "now_playing" ? tb - ta : ta - tb;
+        });
 
       setMovies(filteredMovies);
     } catch (err) {
