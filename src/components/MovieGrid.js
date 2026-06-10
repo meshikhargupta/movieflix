@@ -29,7 +29,7 @@ export default function MovieGrid({ type = "now_playing", heading }) {
 
       const filteredMovies = allMovies
         .filter((movie) => movie.original_language === "hi")
-        .sort((a, b) => new Date(a.release_date) - new Date(b.release_date));
+        .sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
 
       setMovies(filteredMovies);
     } catch (err) {
